@@ -55,7 +55,7 @@ const OverviewPage = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
         {/* Total Products Sold */}
-        <div className="relative group bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+        <div className=" group bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
           <div className="flex items-center space-x-4">
             <FaBox className="text-4xl text-blue-600" />
             <div>
@@ -70,7 +70,7 @@ const OverviewPage = () => {
         </div>
 
         {/* Net Profit */}
-        <div className="relative group bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+        <div className=" group bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
           <div className="flex items-center space-x-4">
             <FaRupeeSign className="text-4xl text-green-600" />
             <div>
@@ -85,7 +85,7 @@ const OverviewPage = () => {
         </div>
 
         {/* Total Customers */}
-        <div className="relative group bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+        <div className=" group bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
           <div className="flex items-center space-x-4">
             <IoPeople className="text-4xl text-purple-600" />
             <div>

@@ -527,7 +527,7 @@ useEffect(()=>{
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="p-6 bg-gray-50 min-h-screen relative"
+      className="p-6 bg-gray-50 min-h-screen "
     >
       {isDropdownOpen && (
         <div 
