@@ -1,10 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
 const Landing_Footer: React.FC = () => {
   const [email, setEmail] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <footer className="bg-black text-white py-6 px-10">
@@ -14,14 +19,16 @@ const Landing_Footer: React.FC = () => {
           <h2 className="text-xl font-bold">ClothBuddy</h2>
           <p className="text-sm mt-2">Subscribe to our Newsletter</p>
           <div className="flex mt-2">
-            <input
-              type="email"
-              placeholder="Enter email"
-              aria-label="Email for newsletter"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="p-2 text-black rounded-l-2xl w-full max-w-xs focus:ring-2 focus:ring-[#E59F9F]"
-            />
+            {mounted && (
+              <input
+                type="email"
+                placeholder="Enter email"
+                aria-label="Email for newsletter"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="p-2 text-black rounded-l-2xl w-full max-w-xs focus:ring-2 focus:ring-[#E59F9F]"
+              />
+            )}
             <button
               type="button"
               aria-label="Subscribe"
@@ -50,7 +57,7 @@ const Landing_Footer: React.FC = () => {
           <h3 className="font-semibold mt-4">About Us</h3>
           <ul className="text-sm mt-2 space-y-1">
             <li>
-              <Link href="#" className="hover:underline">
+              <Link href="/about" className="hover:underline" target="_blank">
                 Who we are?
               </Link>
             </li>

@@ -3,8 +3,6 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import "chart.js/auto";
 import { FaBox, FaDollarSign, FaEye } from "react-icons/fa";
-import ProductPerformance from "./ProductPerformance";
-import LineChart from "./LineChart";
 // Dynamically import Bar Chart to prevent SSR issues
 const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), {
   ssr: false,
@@ -71,8 +69,6 @@ const OverviewPage = () => {
         </div>
       </div>
       {/* Chart Section */}
-     
-
     </div>
   );
 };

@@ -37,4 +37,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contributors
 
-- [@Nitin](https://github.com/nitin6404) -[@Divyansh122]("https://github.com/divyansh122") -[@Rahul]("https://github.com/Rahulchaudharyji2")
+- [@Nitin](https://github.com/nitin6404) 
+- [@Divyansh122]("https://github.com/divyansh122") 
+- [@Rahul]("https://github.com/Rahulchaudharyji2")
