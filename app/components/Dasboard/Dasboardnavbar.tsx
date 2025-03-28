@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   Menu,
   Search,
@@ -85,7 +86,14 @@ export default function DashboardNavbar() {
 
         {/* Brand Name */}
    <Link href="/dashboard" className="flex items-center hover:opacity-80 transition-opacity">
-          <img className="w-14 lg:h-14 lg:w-18 lg:h-18 mr-8" src="/ClothBuddyLogo.png" alt="ClothBuddy Logo" />
+          <Image 
+            className="w-14 lg:h-14 lg:w-18 lg:h-18 mr-8"
+            src="/ClothBuddyLogo.png"
+            alt="ClothBuddy Logo"
+            width={56}
+            height={56}
+            priority
+          />
           <p className="hidden text-lg font-semibold text-black sm:block lg:text-xl">ClothBuddy</p>
         </Link>
 

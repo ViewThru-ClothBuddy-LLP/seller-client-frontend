@@ -23,6 +23,8 @@ const SignUpPage: React.FC = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  console.log(setError)
     
   useEffect(() => {
     if (typeof window !== "undefined") {

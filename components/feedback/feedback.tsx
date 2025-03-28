@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 
-const Feedback = () => {
-  const [feedback, setFeedback] = useState('');
-  const [rating, setRating] = useState(0);
+interface Styles {
+  [key: string]: React.CSSProperties;
+}
 
-  const handleFeedbackChange = (event) => {
+const Feedback = () => {
+  const [feedback, setFeedback] = useState<string>('');
+  const [rating, setRating] = useState<number>(0);
+
+  const handleFeedbackChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFeedback(event.target.value);
   };
 
-  const handleRatingChange = (newRating) => {
+  const handleRatingChange = (newRating: number) => {
     setRating(newRating);
   };
 
@@ -29,16 +33,16 @@ const Feedback = () => {
       />
       <div style={styles.ratingContainer}>
         <h3>Give Rating:</h3>
-        {[...Array(5)].map((star, index) => {
-          index += 1;
+        {[...Array(5)].map((_, index) => {
+          const starValue = index + 1;
           return (
             <button
               type="button"
-              key={index}
+              key={starValue}
               style={styles.ratingButton}
-              onClick={() => handleRatingChange(index)}
+              onClick={() => handleRatingChange(starValue)}
             >
-              {index <= rating ? '★' : '☆'}
+              {starValue <= rating ? '★' : '☆'}
             </button>
           );
         })}
@@ -50,7 +54,7 @@ const Feedback = () => {
   );
 };
 
-const styles = {
+const styles: Styles = {
   container: {
     display: 'flex',
     flexDirection: 'column',
