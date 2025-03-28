@@ -40,7 +40,7 @@ const menuItems = [
   { name: "Settings", href: "/dashboard/settings", icon: <Settings size={22} className="text-gray-500" /> },
   { name: "Reports", href: "/dashboard/reports", icon: <Package size={22} className="text-yellow-500" /> },
   { name: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={22} className="text-indigo-500" /> },
-  { name: "Productlist", href: "/dashboard/productlist", icon:<AiFillProduct size={22} className="text-blue-500" /> },
+  { name: "Productlist", href: "/dashboard/productlist", icon: <AiFillProduct size={22} className="text-blue-500" /> },
   { name: "Feedback", href: "/dashboard/feedback", icon: <MessageSquareMore size={22} className="text-pink-500" /> },
   { name: "Support", href: "/dashboard/support", icon: <LifeBuoy size={22} className="text-red-500" /> },
 ];
@@ -80,22 +80,26 @@ export default function DashboardNavbar() {
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50 py-4 px-6 flex items-center justify-between">
         {/* Sidebar Toggle Button */}
+        <div className="flex items-center gap-3">
         <button className="text-gray-700 hover:bg-gray-200 p-2 rounded-lg transition" onClick={toggleSidebar}>
           <Menu size={26} />
         </button>
 
+
         {/* Brand Name */}
-   <Link href="/dashboard" className="flex items-center hover:opacity-80 transition-opacity">
-          <Image 
-            className="w-14 lg:h-14 lg:w-18 lg:h-18 mr-8"
+        <Link href="/dashboard" className="flex items-center hover:opacity-80 transition-opacity">
+          <Image
+            // className="w- lg:h-18 mr-8"
             src="/ClothBuddyLogo.png"
             alt="ClothBuddy Logo"
             width={56}
             height={56}
             priority
           />
-          <p className="hidden text-lg font-semibold text-black sm:block lg:text-xl">ClothBuddy</p>
+          <p className="hidden ml-2 text-lg font-semibold text-black sm:block lg:text-xl">ClothBuddy</p>
         </Link>
+        </div>
+
 
         {/* Search Bar */}
         <div className="relative flex-1 max-w-lg mx-4">
@@ -144,9 +148,8 @@ export default function DashboardNavbar() {
 
       {/* Rest of your component remains the same */}
       <aside
-        className={`fixed top-0 left-0 h-full w-72 bg-white/90 backdrop-blur-lg shadow-xl z-40 transform transition-transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } rounded-r-xl overflow-hidden`}
+        className={`fixed top-0 left-0 h-full w-72 bg-white/90 backdrop-blur-lg shadow-xl z-40 transform transition-transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } rounded-r-xl overflow-hidden`}
       >
         {/* Sidebar Header */}
         <div className="flex justify-between items-center p-4 border-b border-gray-200">
