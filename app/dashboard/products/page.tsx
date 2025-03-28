@@ -3,13 +3,15 @@
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Image from "next/image";
 
 // Dummy product data
 const dummyProducts = [
   {
     id: 1,
     name: "Product 1",
-    description: "This is a cool product with high-quality fabric, very comfortable to wear.",
+    description:
+      "This is a cool product with high-quality fabric, very comfortable to wear.",
     image: "../Shirt.jpg",
     quantity: 256,
     price: 1000,
@@ -21,7 +23,8 @@ const dummyProducts = [
   {
     id: 2,
     name: "Product 2",
-    description: "Stylish product, made from the best materials and perfect for all occasions.",
+    description:
+      "Stylish product, made from the best materials and perfect for all occasions.",
     image: "../Shirt.jpg",
     quantity: 256,
     price: 1000,
@@ -57,9 +60,11 @@ const dummyProducts = [
 ];
 
 export default function ProductPage() {
-  const [products, setProducts] = useState(dummyProducts);
+  const [products, setProducts] = useState<Product[]>(dummyProducts);
   const [showAddProductForm, setShowAddProductForm] = useState(false);
-  const [newProduct, setNewProduct] = useState({
+  const [newProduct, setNewProduct] = useState<
+    Omit<Product, "id" | "addedDate">
+  >({
     name: "",
     description: "",
     image: "",
@@ -68,9 +73,9 @@ export default function ProductPage() {
     color: "",
     size: "",
     category: "",
-    stockStatus: "In Stock", // Default stock status
+    stockStatus: "In Stock",
   });
-  const [editingProduct, setEditingProduct] = useState(null); // Track the product being edited
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null); // Track the product being edited
 
   // Filter state
   const [filters, setFilters] = useState({
@@ -83,60 +88,65 @@ export default function ProductPage() {
   });
 
   // Handlers for product updates
-  const handleQuantityChange = (id, value) => {
+  // Fix handler parameter types
+  const handleQuantityChange = (id: number, value: string) => {
     const updatedProducts = products.map((product) =>
-      product.id === id ? { ...product, quantity: parseInt(value) } : product
+      product.id === id ? { ...product, quantity: parseInt(value) || 0 } : product
     );
     setProducts(updatedProducts);
   };
-
-  const handlePriceChange = (id, value) => {
+  
+  const handlePriceChange = (id: number, value: string) => {
     const updatedProducts = products.map((product) =>
-      product.id === id ? { ...product, price: parseInt(value) } : product
+      product.id === id ? { ...product, price: parseInt(value) || 0 } : product
     );
     setProducts(updatedProducts);
   };
-
-  const handleAddToStore = (id) => {
+  
+  const handleAddToStore = (id: number) => {
     toast.success(`Product ${id} added to store!`, { position: "top-center" });
   };
-
-  const handleUpdate = (id) => {
+  
+  const handleUpdate = (id: number) => {
     const productToEdit = products.find((product) => product.id === id);
-    setEditingProduct(productToEdit); // Set the product to be edited
+    setEditingProduct(productToEdit || null); // Set the product to be edited, defaulting to null if undefined
   };
-
+  
   const handleSaveUpdate = () => {
-    const updatedProducts = products.map((product) =>
-      product.id === editingProduct.id ? editingProduct : product
-    );
-    setProducts(updatedProducts);
-    setEditingProduct(null); // Clear the editing state
-    toast.success("Product updated successfully!", { position: "top-center" });
+    if (editingProduct) {
+      const updatedProducts = products.map((product) =>
+        product.id === editingProduct.id ? editingProduct : product
+      );
+      setProducts(updatedProducts);
+      setEditingProduct(null);
+      toast.success("Product updated successfully!", { position: "top-center" });
+    }
   };
-
-  const handleDelete = (id) => {
+  
+  const handleDelete = (id: number) => {
     const updatedProducts = products.filter((product) => product.id !== id);
     setProducts(updatedProducts);
     toast.error(`Product ${id} deleted!`, { position: "top-center" });
   };
 
   const handleAddProduct = () => {
-    const { name, description, image, color, size, category, quantity, price } = newProduct;
+    const { name, description, image, color, size, category, quantity, price } =
+      newProduct;
 
     // if (!name || !description || !image || !color || !size || !category) {
     //   toast.warning("Please fill all required fields!", { position: "top-center" });
     //   return;
     // }
 
-    const newId = products.length > 0 ? products[products.length - 1].id + 1 : 1;
+    const newId =
+      products.length > 0 ? products[products.length - 1].id + 1 : 1;
     const productToAdd = {
       id: newId,
       name,
       description,
       image,
-      quantity: parseInt(quantity),
-      price: parseInt(price),
+      quantity: parseInt(quantity.toString()),
+      price: parseInt(price.toString()),
       color,
       size,
       category,
@@ -156,7 +166,9 @@ export default function ProductPage() {
       category: "",
       stockStatus: "In Stock", // Reset stock status
     });
-    toast.success("New product added successfully!", { position: "top-center" });
+    toast.success("New product added successfully!", {
+      position: "top-center",
+    });
     setShowAddProductForm(false);
 
     // Debugging: Log the updated products array
@@ -168,8 +180,10 @@ export default function ProductPage() {
     const matchesCategory =
       filters.category === "All" || product.category === filters.category;
     const matchesPriceRange =
-      product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1];
-    const matchesColor = filters.color === "Any" || product.color === filters.color;
+      product.price >= filters.priceRange[0] &&
+      product.price <= filters.priceRange[1];
+    const matchesColor =
+      filters.color === "Any" || product.color === filters.color;
     const matchesSize = filters.size === "Any" || product.size === filters.size;
     const matchesAvailability =
       filters.availability === "Any" ||
@@ -178,7 +192,8 @@ export default function ProductPage() {
     const matchesRecentlyAdded =
       !filters.recentlyAdded ||
       (filters.recentlyAdded &&
-        new Date(product.addedDate) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
+        new Date(product.addedDate) >
+          new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
 
     return (
       matchesCategory &&
@@ -194,27 +209,31 @@ export default function ProductPage() {
   console.log("Filtered Products:", filteredProducts);
 
   // Handle filter changes
-  const handleCategoryChange = (e) => {
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilters({ ...filters, category: e.target.value });
   };
 
-  const handlePriceRangeChange = (e) => {
-    setFilters({ ...filters, priceRange: [500, e.target.value] });
+  const handlePriceRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters({ ...filters, priceRange: [500, parseInt(e.target.value)] });
   };
 
-  const handleColorChange = (e) => {
+  const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilters({ ...filters, color: e.target.value });
   };
 
-  const handleSizeChange = (e) => {
+  const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilters({ ...filters, size: e.target.value });
   };
 
-  const handleAvailabilityChange = (e) => {
+  const handleAvailabilityChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setFilters({ ...filters, availability: e.target.value });
   };
 
-  const handleRecentlyAddedChange = (e) => {
+  const handleRecentlyAddedChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFilters({ ...filters, recentlyAdded: e.target.checked });
   };
 
@@ -256,7 +275,9 @@ export default function ProductPage() {
 
             {/* Price Range Filter */}
             <div>
-              <label className="block text-sm font-medium mb-1">Price Range</label>
+              <label className="block text-sm font-medium mb-1">
+                Price Range
+              </label>
               <input
                 type="range"
                 min="500"
@@ -307,7 +328,9 @@ export default function ProductPage() {
 
             {/* Availability Filter */}
             <div>
-              <label className="block text-sm font-medium mb-1">Availability</label>
+              <label className="block text-sm font-medium mb-1">
+                Availability
+              </label>
               <select
                 value={filters.availability}
                 onChange={handleAvailabilityChange}
@@ -346,10 +369,12 @@ export default function ProductPage() {
             <div key={product.id} className="mb-8">
               <div className="bg-white rounded-lg p-6 shadow flex flex-col md:flex-row md:items-start md:justify-between space-y-4 md:space-y-0">
                 {/* Product Image */}
-                <img
+                <Image
                   src={product.image}
                   alt={product.name}
-                  className="w-28 h-28 object-cover rounded mx-auto md:mx-0"
+                  width={112}
+                  height={112}
+                  className="object-cover rounded mx-auto md:mx-0"
                 />
 
                 {/* Product Details */}
@@ -359,12 +384,16 @@ export default function ProductPage() {
                     <h2 className="font-bold text-lg text-center md:text-left">
                       {product.name}
                     </h2>
-                    <p className="text-sm text-gray-600">{product.description}</p>
-                    <p className="text-sm">
-                      <span className="font-semibold">Color:</span> {product.color}
+                    <p className="text-sm text-gray-600">
+                      {product.description}
                     </p>
                     <p className="text-sm">
-                      <span className="font-semibold">Size:</span> {product.size}
+                      <span className="font-semibold">Color:</span>{" "}
+                      {product.color}
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-semibold">Size:</span>{" "}
+                      {product.size}
                     </p>
                     <p className="text-sm">
                       <span className="font-semibold">Stock:</span>{" "}
@@ -391,7 +420,9 @@ export default function ProductPage() {
                       <input
                         type="number"
                         value={product.price}
-                        onChange={(e) => handlePriceChange(product.id, e.target.value)}
+                        onChange={(e) =>
+                          handlePriceChange(product.id, e.target.value)
+                        }
                         className="border border-gray-300 px-3 py-2 w-32 rounded"
                       />
                     </div>
@@ -434,7 +465,10 @@ export default function ProductPage() {
                       placeholder="Product Name"
                       value={editingProduct.name}
                       onChange={(e) =>
-                        setEditingProduct({ ...editingProduct, name: e.target.value })
+                        setEditingProduct({
+                          ...editingProduct,
+                          name: e.target.value,
+                        })
                       }
                       className="border border-gray-300 rounded p-2"
                     />
@@ -444,7 +478,10 @@ export default function ProductPage() {
                       placeholder="Image URL"
                       value={editingProduct.image}
                       onChange={(e) =>
-                        setEditingProduct({ ...editingProduct, image: e.target.value })
+                        setEditingProduct({
+                          ...editingProduct,
+                          image: e.target.value,
+                        })
                       }
                       className="border border-gray-300 rounded p-2"
                     />
@@ -453,7 +490,10 @@ export default function ProductPage() {
                       placeholder="Description"
                       value={editingProduct.description}
                       onChange={(e) =>
-                        setEditingProduct({ ...editingProduct, description: e.target.value })
+                        setEditingProduct({
+                          ...editingProduct,
+                          description: e.target.value,
+                        })
                       }
                       className="border border-gray-300 rounded p-2 md:col-span-2"
                     />
@@ -463,7 +503,10 @@ export default function ProductPage() {
                       placeholder="Color"
                       value={editingProduct.color}
                       onChange={(e) =>
-                        setEditingProduct({ ...editingProduct, color: e.target.value })
+                        setEditingProduct({
+                          ...editingProduct,
+                          color: e.target.value,
+                        })
                       }
                       className="border border-gray-300 rounded p-2"
                     />
@@ -473,7 +516,10 @@ export default function ProductPage() {
                       placeholder="Size"
                       value={editingProduct.size}
                       onChange={(e) =>
-                        setEditingProduct({ ...editingProduct, size: e.target.value })
+                        setEditingProduct({
+                          ...editingProduct,
+                          size: e.target.value,
+                        })
                       }
                       className="border border-gray-300 rounded p-2"
                     />
@@ -481,7 +527,11 @@ export default function ProductPage() {
                     <div className="flex flex-col">
                       <label className="font-semibold mb-1">Stock Status</label>
                       <select
-                        value={editingProduct.quantity > 0 ? "In Stock" : "Out of Stock"}
+                        value={
+                          editingProduct.quantity > 0
+                            ? "In Stock"
+                            : "Out of Stock"
+                        }
                         onChange={(e) =>
                           setEditingProduct({
                             ...editingProduct,
@@ -500,7 +550,10 @@ export default function ProductPage() {
                       placeholder="Quantity"
                       value={editingProduct.quantity}
                       onChange={(e) =>
-                        setEditingProduct({ ...editingProduct, quantity: e.target.value })
+                        setEditingProduct({
+                          ...editingProduct,
+                          quantity: parseInt(e.target.value) || 0,
+                        })
                       }
                       className="border border-gray-300 rounded p-2"
                     />
@@ -510,7 +563,10 @@ export default function ProductPage() {
                       placeholder="Price"
                       value={editingProduct.price}
                       onChange={(e) =>
-                        setEditingProduct({ ...editingProduct, price: e.target.value })
+                        setEditingProduct({
+                          ...editingProduct,
+                          price: parseInt(e.target.value) || 0,
+                        })
                       }
                       className="border border-gray-300 rounded p-2"
                     />
@@ -567,7 +623,10 @@ export default function ProductPage() {
                   placeholder="Description"
                   value={newProduct.description}
                   onChange={(e) =>
-                    setNewProduct({ ...newProduct, description: e.target.value })
+                    setNewProduct({
+                      ...newProduct,
+                      description: e.target.value,
+                    })
                   }
                   className="border border-gray-300 rounded p-2 md:col-span-2"
                 />
@@ -597,7 +656,10 @@ export default function ProductPage() {
                   <select
                     value={newProduct.stockStatus}
                     onChange={(e) =>
-                      setNewProduct({ ...newProduct, stockStatus: e.target.value })
+                      setNewProduct({
+                        ...newProduct,
+                        stockStatus: e.target.value,
+                      })
                     }
                     className="border border-gray-300 rounded p-2"
                   >
@@ -611,7 +673,7 @@ export default function ProductPage() {
                   placeholder="Quantity"
                   value={newProduct.quantity}
                   onChange={(e) =>
-                    setNewProduct({ ...newProduct, quantity: e.target.value })
+                    setNewProduct({ ...newProduct, quantity: parseInt(e.target.value) || 0 })
                   }
                   className="border border-gray-300 rounded p-2"
                 />
@@ -621,7 +683,7 @@ export default function ProductPage() {
                   placeholder="Price"
                   value={newProduct.price}
                   onChange={(e) =>
-                    setNewProduct({ ...newProduct, price: e.target.value })
+                    setNewProduct({ ...newProduct, price: parseInt(e.target.value) || 0 })
                   }
                   className="border border-gray-300 rounded p-2"
                 />
@@ -640,3 +702,26 @@ export default function ProductPage() {
     </div>
   );
 }
+
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  quantity: number;
+  price: number;
+  color: string;
+  size: string;
+  category: string;
+  addedDate: Date;
+  stockStatus?: string;
+}
+
+// interface Filters {
+//   category: string;
+//   priceRange: number[];
+//   color: string;
+//   size: string;
+//   availability: string;
+//   recentlyAdded: boolean;
+// }

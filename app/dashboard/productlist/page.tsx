@@ -1,9 +1,25 @@
 'use client';
 import { useState } from 'react';
-import Image from 'next/image';
+
+interface ProductForm {
+  name: string;
+  description: string;
+  colors: string[];
+  otherColor: string;
+  price: string;
+  quantity: string;
+  delivery: 'self' | 'rider';
+  image: File | null;
+}
+
+interface ColorOption {
+  name: string;
+  value: string;
+  hex: string;
+}
 
 export default function ProductForm() {
-  const [product, setProduct] = useState({
+  const [product, setProduct] = useState<ProductForm>({
     name: '',
     description: '',
     colors: [],
@@ -13,24 +29,31 @@ export default function ProductForm() {
     delivery: 'self',
     image: null,
   });
-  const colorOptions = [
+
+  const colorOptions: ColorOption[] = [
     { name: 'Red', value: 'red', hex: '#FF0000' },
     { name: 'Black', value: 'black', hex: '#000000' },
     { name: 'Blue', value: 'blue', hex: '#0000FF' },
     { name: 'Purple', value: 'purple', hex: '#800080' },
   ];
 
-  const handleFileChange = (e) => {
-    setProduct({ ...product, image: e.target.files[0] });
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setProduct({ ...product, image: file });
   };
 
-  const handleColorChange = (color) => {
+  const handleColorChange = (color: string) => {
     setProduct((prev) => {
       const colors = prev.colors.includes(color)
         ? prev.colors.filter((c) => c !== color)
         : [...prev.colors, color];
       return { ...prev, colors };
     });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setProduct(prev => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -48,20 +71,22 @@ export default function ProductForm() {
           
           <input
             type="text"
+            name="name"
             placeholder="Name of the product"
             className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-400"
             value={product.name}
-            onChange={(e) => setProduct({ ...product, name: e.target.value })}
+            onChange={handleInputChange}
           />
         </div>
         
         <textarea
+          name="description"
           placeholder="Product description"
           className="w-full p-3 border rounded-lg mt-6 bg-gray-50 focus:ring-2 focus:ring-blue-400"
           value={product.description}
-          onChange={(e) => setProduct({ ...product, description: e.target.value })}
-        ></textarea>
-        
+          onChange={handleInputChange}
+        />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="border p-5 rounded-lg bg-gray-50">
             <p className="font-semibold mb-3">Color Available</p>
@@ -82,10 +107,11 @@ export default function ProductForm() {
             <p className="font-semibold mb-3">Other Color</p>
             <input
               type="text"
+              name="otherColor"
               placeholder="Enter custom color"
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
               value={product.otherColor}
-              onChange={(e) => setProduct({ ...product, otherColor: e.target.value })}
+              onChange={handleInputChange}
             />
           </div>
         </div>
@@ -93,17 +119,19 @@ export default function ProductForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <input
             type="number"
+            name="price"
             placeholder="₹ Price"
             className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-400"
             value={product.price}
-            onChange={(e) => setProduct({ ...product, price: e.target.value })}
+            onChange={handleInputChange}
           />
           <input
             type="number"
+            name="quantity"
             placeholder="Quantity"
             className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-400"
             value={product.quantity}
-            onChange={(e) => setProduct({ ...product, quantity: e.target.value })}
+            onChange={handleInputChange}
           />
         </div>
         
@@ -129,7 +157,7 @@ export default function ProductForm() {
               checked={product.delivery === 'rider'}
               onChange={() => setProduct({ ...product, delivery: 'rider' })}
             />
-            <span>I want ClothBuddy's Rider to ship my Product</span>
+            <span>I want ClothBuddy&apos;s Rider to ship my Product</span>
           </label>
         </div>
         
